@@ -1,24 +1,25 @@
-# Expansion of the National Drug File to include non-US drugs
+# Expansion of the National Drug File to Include Non-US Drugs
 This paper is funded by Electronic Health Solutions LLC from the Hashemite
 Kingdom of Jordan.
 
-Released under CC-BY 3.0. Code accompanying this paper is all in the public domain.
+Released under CC-BY 4.0. https://creativecommons.org/licenses/by/4.0/
+Code accompanying this paper is all in the public domain. 
 
 ## Purpose of this Paper
 This paper is intended to describe a possible path to the addition of
 non-US medicines to the National Drug Files in VistA. Addition to the National
 Drug Files is a pre-requisite to being able to have allergy, drug-interaction,
-and duplicate therapy order checks for medicines that are found in Jordan but
-are not found in the United States. It will also help when having to resolve
+and duplicate therapy order checks for medicines that are available in Jordan but
+are not available in the United States. It will also help when having to resolve
 data from one VistA system to another VistA system.
 
-The reason this is necessary is that medicines are non-standarzied across all
-of the world; and thus medicines marketed in one country may not be marketed in
-another; and even if marketed, there is no guarantee that the medicines will be
+This is necessary because medicines are not standardized across all
+of the world. Thus, medicines marketed in one country may not be marketed in
+another, and even if marketed, there is no guarantee that the medicines will be
 in the same dosage form or the same strength as the US medicines.
 
 ## What is the NDF?
-The NDF is an acronym for "National Drug File". This is misleading: it really
+NDF is an acronym for "National Drug File". This is misleading, it really
 consists of 19 files, as follows in this table:
 
 | File Number | File Name | Global Location |
@@ -44,17 +45,17 @@ consists of 19 files, as follows in this table:
 | \#56          | DRUG INTERACTION | ^PS(56)  |
 
 Files with a asterisk next to their number are not maintained by the VA. They
-are loaded directly from FDB data. Files with a hash next to their number are
+are loaded directly from First Databank (FDB) data. Files with a hash next to their number are
 not used in the VA anymore; but are still maintained for Indian Health Service.
 
 Looking at the list of the above files does not help with knowing what's
-important and what isn't. So I will state it here: VA PRODUCT is the center of
-NDF. Drugs are tied to a VA PRODUCT and by virtue of that may be able to
-participate in Drug Interaction, Duplicate Therapy, and Allergy/ADR checks.
+important and what isn't. The VA PRODUCT file is the center of
+NDF. Drugs are tied to a VA PRODUCT, and by virtue of that, may be able to
+be used in Drug Interaction, Duplicate Therapy, and Allergy/ADR checks.
 The VA PRODUCT in turn points to all other files. Here's a map produced by
-Fileman's 'MAP POINTER RELATIONS' option. Note the all of the pointers are
-forward pointers (one VA PRODUCT to one), with the exception of NDC/UPN
-(50.67), which has a backwards pointer (many to one VA PRODUCT). 
+Fileman's 'MAP POINTER RELATIONS' option. Note that all of the pointers are
+forward pointers (one VA PRODUCT to one relationship), with the exception of NDC/UPN
+(50.67), which has a backwards pointer (many to one VA PRODUCT relationship). 
 
 ```
    File/Package: VA PRODUCT POINTERS                                                        Date: NOV 9,2016
@@ -82,68 +83,66 @@ forward pointers (one VA PRODUCT to one), with the exception of NDC/UPN
                                                                                           | m SECONDARY V:SECONDARY V*  |-> VA DRUG CLASS
                                                                                           -------------------------------
 ```
-## How is the NDF maintained?
+## How is the NDF Maintained?
 The NDF was maintained using the National Drug File Management System (NDFMS),
 a VistA application running on a standalone system. The NDF was maintained by
-four pharmacists [1] who monitored FDB, the FDA, and user input; and made
+four pharmacists [1] who monitored FDB, the United States Food and Drug Administration (FDA), and user input, then made
 changes to the NDF as a result. After each month was over, a "cut" of the
 changes was created by looking at the Audit Fileman Global since the last time
-an update was sent. This cut is installed at the destination VistA systems in
-order to update the NDF at each site using VistA. Of note, none of the internal
+an update was sent. This cut is installed at the destination VistA systems
+to update the NDF at each site using VistA. Of note, none of the internal
 entry numbers (IENs) of the files are resolved at the destination system; they are all
-sent as is. In other words, there is no pointer resolution: all files are
+sent as is. In other words, there is no pointer resolution, all files are
 assumed to be in an identical static state across all VistA sites.
 
 Since 2013, the VA has transitioned to a Web Application called Pharmacy
 Product System - National (PPS-N). This application provides similar capabilites
 to NDFMS, but includes extra functionality, especially with regards to querying
 external data sources. The application interfaces with the NDFMS via remote
-procedures; NDFMS is still responsible today for making the "cut" to send to
+procedures. NDFMS is still responsible for making the "cut" to send to
 destination VistA systems. As of today (Nov 9th 2016), the KIDS builds that
-are applied to the NDFMS in order be able to communicate to PPS-N are not
-available. A FOIA request has been placed in order to obtain them.
+are applied to the NDFMS to communicate to PPS-N are not
+available. A Freedom of Information Act (FOIA) request has been placed to obtain them.
 
-There is no documentation besides what I will supply here in this paper for
-NDFMS. KIDS build will be supplied along with this paper.
-
-Documentation for PPS-N can be found at [2].
-
+All available documentation for NDFMS is supplied with this paper. A KIDS build of the NDFMS code will also be supplied.
+Documentation for PPS-N can be found at http://www.va.gov/vdl/application.asp?appid=202 [2]. 
 Source code for the two future versions (unreleased) of PPS-N can be found at
-[3] and [4]. I can't find the source code for v1.0.
+http://hdl.handle.net/10909/11003 [3] and http://hdl.handle.net/10909/11163 [4]. The source code for v1.0 
+is not available.
 
-## Proposed Process for adding non-US drugs to the NDF
-### Activation of previously inactive entries
+## Proposed Process for Adding Non-US drugs to the NDF
+### Activation of Previously Inactive Entries
 An easy fix for many products is that they may exist already in the NDF, but
 are inactive. If that is so, it's easy to activate them by reversing the action
 of the menu option [NDF INACTIVATE PRODUCT] found in the NDFMS system.
-### Adding new entries
+### Adding New Entries
 Due to the fact that IENs are static at the client sites--i.e., they are what
 the source NDFMS supplies, it is a feasible proposition to have non-US drugs
 at higher numbers. I do not know if NDF patches from the VA will continue
-working as is or will they need some modifications. As far as I am able to tell,
+working as is or if they will need some modifications. As far as I am able to tell,
 everything in the VA NDF patch is entered into the VistA system using static
 IENs.
-### Making the patch
+### Making the Patch
 I think this may be the hardest: making a Jordan specific NDF patch. The
 reason is that the NDFMS system needs initial configuration and data entry in
 files in the 5000 range which it distrubutes. However, there is no documentation
-on how to do that.
+to do that.
 
-## Timeline if I were to develop this
+## Estimatated Timeline if I Were to Develop This
  * 100 hours to get NDFMS running
  * 100 hours to get Jordan specific numbering running
  * I can't estimate porting effort for PPS-N as I have no expertise in porting
    Java applications that run on IBM WebLogic. I don't think it's necessary
    for this project. PPS-N may provide a convenient way to enter data--but as
-   usual, there is a lot of data sources it taps into which are unapplicable in
+   usual, there are a lot of data sources it taps into which are not applicable in
    Jordan.
 
-## Technical Details for reverse engineering the NDF process
+## Technical Details for Reverse Engineering the NDF process
 This section is intended for the programmers who will do the work. It describes
 some of my findings that are pertinent to this project.
 
 ### Post Install for NDF Data Update Patches
-In this package, under the folder PSN_4.0_466, you will eventually find a file
+In this package, under the folder PSN_4.0_466, you will find a file
 called PSN466D.m. I annotated this file for interested readers.
 
 It reads the KIDS transport global referenced in XPDGREF, and looks first at
@@ -152,13 +151,13 @@ Of note, FILE^DICN is called with the exact number of the IEN to enter using the
 variable DINUM.
 
 Next, subscript DATAN is examined. It contains the .01's for the multiples.
-Again, the IENs are maintained; this time by sending the "IEN" subscripted
+Again, the IENs are maintained, this time by sending the "IEN" subscripted
 variable with the desired IENs to UPDATE^DIE. Any changes to active ingredients
 are cached into a ^TMP global.
 
 Next, subscript DATAO contains the rest of the data. It's filed using FILE^DIE.
 
-Next, Cached changes to active ingredients are sent over to the Drug Ingredients
+Next, cached changes to active ingredients are sent over to the Drug Ingredients
 file.
 
 Next, two email messages are sent. The email messages are NOT generated on the
@@ -172,7 +171,7 @@ National Formulary Indicator and the VA Class.
 Next, the unmatched drugs email message is sent.
 
 ### NDF Management System Details
-The NDF Management system's main menu is called "NDF MANAGER". It contains:
+The NDF Management System's main menu is called "NDF MANAGER". It contains:
 
  * NDF ENTER EDIT
  * NDF REPORTS
@@ -181,7 +180,7 @@ The NDF Management system's main menu is called "NDF MANAGER". It contains:
  * NDFPBM (calls a ZZ routine)
  * NDFRTE (calls a ZZ routine)
 
-We only care right now about NDF ENTER EDIT and NDF MISCELLENOUS. Here's NDF
+We only care right now about NDF ENTER EDIT and NDF MISCELLANEOUS. Here's NDF
 ENTER EDIT:
 
  * NDF VA PRODUCT
@@ -224,10 +223,10 @@ unique numbering system for that field too.
 # Attachments
 Along with this report, I am sending patch PSN\*4.0\*466 as an example NDF
 Data patch, as well the FOIA copy of the NDF Management System. All routines
-referenced anywhere in the document can be found in either of these two folders.
+referenced anywhere in this document can be found in either of these two folders.
 
 # Footnotes
-[1] Personal conversation with Don Lees, manager of the NDF at PBM, VA.
+[1] Personal conversation with Don Lees, April, 2010, Manager of the NDF at Pharmacy Benefits Management Services, VA.
 [2] http://www.va.gov/vdl/application.asp?appid=202
 [3] http://hdl.handle.net/10909/11003
 [4] http://hdl.handle.net/10909/11163
